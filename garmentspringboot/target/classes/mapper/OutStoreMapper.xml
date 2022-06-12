@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ccsu.mapper.OutStoreMapper">
+    <resultMap id="OutStoreEntityMap" type="cn.ccsu.entity.OutStore">
+        <id column="id" property="id"></id>
+        <result column="create_time" property="createTime"></result>
+        <result column="create_By" property="createBy"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="update_By" property="updateBy"></result>
+    </resultMap>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
+        insert into sys_outstore(number,storage,agent,towhere,outTime,remark ,create_time,create_by,update_time,update_by,isDelete) values (#{number},#{storage},#{agent},#{towhere},#{outTime},#{remark},#{createTime},#{createBy},#{updateTime},#{updateBy},#{isDelete})
+    </insert>
+
+    <insert id="insertById">
+        INSERT INTO sys_outstore_detail(outstore_id,outdetail_id) VALUES (#{outId},#{detailId})
+    </insert>
+
+    <select id="getOutStoreList" resultMap="OutStoreEntityMap">
+        SELECT * FROM sys_outstore WHERE isDelete = '1'
+        <trim prefixOverrides="">
+            <if test="storage !=null and storage != '' ">
+                and storage like CONCAT('%',#{storage},'%')
+            </if>
+            <if test="number !=null and number != '' ">
+                and number like CONCAT('%',#{number},'%')
+            </if>
+        </trim>
+    </select>
+
+    <update id="removeById">
+        UPDATE sys_outstore SET isDelete=#{isDelete},update_time=#{updateTime},update_by=#{updateBy} where id=#{id}
+    </update>
+
+    <select id="getById" resultMap="OutStoreEntityMap">
+        SELECT * FROM sys_outstore WHERE id=#{id}
+    </select>
+
+    <select id="modifyOutStore" resultMap="OutStoreEntityMap">
+        UPDATE sys_outstore SET agent=#{agent}, storage=#{storage},towhere=#{towhere},remark=#{remark},update_time=#{updateTime},update_by=#{updateBy} where id=#{id}
+    </select>
+</mapper>

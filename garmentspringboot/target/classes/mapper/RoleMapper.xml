@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ccsu.mapper.RoleMapper">
+    <resultMap id="RoleEntityMap" type="cn.ccsu.entity.Role">
+        <id column="id" property="id"></id>
+        <result column="create_time" property="createTime"></result>
+        <result column="create_By" property="createBy"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="update_By" property="updateBy"></result>
+    </resultMap>
+
+    <select id="getAll" resultMap="RoleEntityMap">
+        SELECT id,name,`key` FROM sys_role WHERE isDelete='1'
+    </select>
+
+    <select id="getRoles" resultMap="RoleEntityMap">
+        SELECT r.id,r.`name`,r.`key` FROM sys_role r
+        LEFT JOIN sys_user_role s ON r.id=s.role_id
+        WHERE s.user_id=#{id}
+    </select>
+
+    <select id="getRolesKey" resultType="string">
+        SELECT r.`key` FROM sys_role r
+        LEFT JOIN sys_user_role s ON r.id=s.role_id
+        WHERE s.user_id=#{id}
+    </select>
+</mapper>

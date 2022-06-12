@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ccsu.mapper.PutDetailMapper">
+    <resultMap id="PutDetailEntityMap" type="cn.ccsu.entity.PutStoreDetail">
+        <id column="id" property="id"></id>
+        <result column="create_time" property="createTime"></result>
+        <result column="create_By" property="createBy"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="update_By" property="updateBy"></result>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO sys_putstoredetail(name,count,size,colour,goodsId,create_time,create_by,update_by,update_time) values (#{name},#{count},#{size},#{colour},#{goodsId},#{createTime},#{createBy},#{updateBy},#{updateTime})
+    </insert>
+
+    <select id="getByPutId" resultMap="PutDetailEntityMap">
+        SELECT d.id,d.`name`,d.count,d.size,d.colour,d.goodsId,d.create_time,d.create_by,d.update_by,d.update_time FROM sys_putstoredetail d
+        LEFT JOIN sys_putstore_detail l ON d.id=l.indetail_id
+        WHERE l.putstore_id=#{id}
+    </select>
+
+</mapper>

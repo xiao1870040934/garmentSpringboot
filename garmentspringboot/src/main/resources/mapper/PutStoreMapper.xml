@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ccsu.mapper.PutStoreMapper">
+    <resultMap id="PutStoreEntityMap" type="cn.ccsu.entity.PutStore">
+        <id column="id" property="id"></id>
+        <result column="create_time" property="createTime"></result>
+        <result column="create_by" property="createBy"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="update_by" property="updateBy"></result>
+    </resultMap>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
+        INSERT INTO sys_putstore(number,storage,agent,`from`,remark,addTime,create_time,create_by,update_time,update_by,isDelete) values (#{number},#{storage},#{agent},#{from},#{remark},#{addTime},#{createTime},#{createBy},#{updateTime},#{updateBy},#{isDelete})
+    </insert>
+
+    <insert id="insertById">
+        INSERT INTO sys_putstore_detail(putstore_id,indetail_id) VALUES (#{putId},#{detailId})
+    </insert>
+
+    <select id="getInStoreList" resultMap="PutStoreEntityMap">
+        SELECT * FROM sys_putstore WHERE isDelete = '1'
+        <trim prefixOverrides="">
+            <if test="addTime !=null and addTime != '' ">
+                and addTime like CONCAT('%',#{addTime},'%')
+            </if>
+            <if test="number !=null and number != '' ">
+                and number like CONCAT('%',#{number},'%')
+            </if>
+        </trim>
+    </select>
+
+    <update id="removeById">
+        UPDATE sys_putstore SET isDelete=#{isDelete},update_time=#{updateTime},update_By=#{updateBy} where id=#{id}
+    </update>
+
+    <select id="getById" resultMap="PutStoreEntityMap">
+        SELECT * FROM sys_putstore WHERE id=#{id}
+    </select>
+
+    <update id="modifyPutStore">
+        UPDATE sys_putstore SET agent=#{agent}, storage=#{storage},`from`=#{from},remark=#{remark},update_time=#{updateTime},update_By=#{updateBy} where id=#{id}
+    </update>
+</mapper>

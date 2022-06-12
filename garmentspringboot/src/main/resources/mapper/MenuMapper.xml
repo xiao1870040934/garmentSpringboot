@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ccsu.mapper.MenuMapper">
+    <resultMap id="MenuEntityMap" type="cn.ccsu.entity.Menu">
+        <id column="id" property="id"></id>
+        <result column="create_time" property="createTime"></result>
+        <result column="create_By" property="createBy"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="update_By" property="updateBy"></result>
+    </resultMap>
+
+    <select id="getRoutesByUserId" resultType="string">
+        SELECT DISTINCT route FROM sys_menu m
+          LEFT JOIN sys_role_menu s ON m.id=s.menu_id
+          LEFT JOIN sys_role r ON r.id=s.role_id
+          LEFT JOIN sys_user_role u ON u.role_id=r.id
+          WHERE u.user_id =#{id}
+    </select>
+
+    <select id="getByRoleId" resultMap="MenuEntityMap">
+        SELECT * FROM sys_menu m
+        LEFT JOIN sys_role_menu r ON m.id=r.menu_id
+        WHERE r.role_id=#{id}
+    </select>
+
+    <select id="getAll" resultMap="MenuEntityMap">
+        SELECT * FROM sys_menu WHERE isDelete='1'
+    </select>
+
+    <delete id="removeMenus">
+        DELETE FROM sys_role_menu WHERE role_id=#{id}
+    </delete>
+
+    <insert id="assignRoles">
+        INSERT INTO sys_role_menu(
+        role_id,menu_id
+        ) VALUES
+        <foreach collection="menuId" item="mid" separator=",">
+            (#{id},#{mid})
+        </foreach>
+    </insert>
+</mapper>

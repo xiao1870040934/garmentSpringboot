@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ccsu.mapper.OutDetailMapper">
+    <resultMap id="OutDetailEntityMap" type="cn.ccsu.entity.OutStoreDetail">
+        <id column="id" property="id"></id>
+        <result column="count" property="outCount"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="create_by" property="createBy"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="update_by" property="updateBy"></result>
+    </resultMap>
+    <insert id="insert" keyColumn="id" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_outstoredetail(name,count ,size,colour,goodsId,create_time,create_by,update_time,update_by) values (#{name},#{outCount},#{size},#{colour},#{goodsId},#{createTime},#{createBy},#{updateTime},#{updateBy})
+    </insert>
+
+    <select id="getByOutId" resultMap="OutDetailEntityMap">
+        SELECT d.id,d.`name`,d.count,d.size,d.colour,d.goodsId,d.create_time,d.create_by,d.update_by,d.update_time FROM sys_outstoredetail d
+        LEFT JOIN sys_outstore_detail l ON d.id=l.outdetail_id
+        WHERE l.outstore_id=#{id}
+    </select>
+</mapper>

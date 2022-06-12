@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ccsu.mapper.PermissionMapper">
+    <select id="getByRoleId" resultType="cn.ccsu.entity.Permission">
+        SELECT p.id,p.name,p.parms FROM sys_permission p
+        LEFT JOIN sys_role_permission r ON p.id=r.permission_id
+        where r.role_id=#{id}
+    </select>
+
+    <select id="getAll" resultType="cn.ccsu.entity.Permission">
+        SELECT * FROM sys_permission WHERE isDelete='1'
+    </select>
+
+    <delete id="removePermission">
+        DELETE * FROM sys_role_permission WHERE role_id=#{id}
+    </delete>
+
+    <insert id=" assignRoles">
+        INSERT INTO sys_role_permission(
+        role_id,permission_id
+        ) VALUES
+        <foreach collection="permissionId" item="pid" separator=",">
+            (#{id},#{pid})
+        </foreach>
+    </insert>
+
+    <select id="getByUserId" resultType="string">
+        SELECT DISTINCT p.parms FROM sys_permission p
+        LEFT JOIN sys_role_permission s ON p.id=s.permission_id
+        LEFT JOIN sys_user_role u ON s.role_id=u.role_id
+        WHERE u.user_id=#{id}
+    </select>
+</mapper>

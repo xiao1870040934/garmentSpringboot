@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ccsu.mapper.GoodsMapper">
+    <resultMap id="GoodsEntityMap" type="cn.ccsu.entity.Goods">
+        <id column="id" property="id"></id>
+        <result column="create_time" property="createTime"></result>
+        <result column="create_By" property="createBy"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="update_By" property="updateBy"></result>
+    </resultMap>
+
+    <select id="selectByName" resultMap="GoodsEntityMap">
+        SELECT * FROM sys_clothe where name like #{name} AND size like #{size} AND colour like #{colour}
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
+        INSERT INTO sys_clothe(name,number,count,size,colour,create_time,create_by,update_time,update_by,isDelete) VALUES (#{name},#{number},#{count},#{size},#{colour},#{createTime},#{createBy},#{updateTime},#{updateBy},#{isDelete})
+    </insert>
+
+    <update id="modifyById">
+        UPDATE sys_clothe SET count=#{count},update_time=#{updateTime},update_By=#{updateBy} where id=#{id}
+    </update>
+
+    <select id="getListByInfo" resultMap="GoodsEntityMap">
+        SELECT * FROM sys_clothe where isDelete = '1'
+        <trim prefixOverrides="">
+            <if test="name !=null and name != '' ">
+                and name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="number !=null and number != '' ">
+                and number like CONCAT('%',#{number},'%')
+            </if>
+        </trim>
+    </select>
+
+    <update id="deleteById">
+        UPDATE sys_clothe SET isDelete=#{isDelete},update_time=#{updateTime},update_By=#{updateBy} where id=#{id}
+    </update>
+
+    <select id="selectById" resultMap="GoodsEntityMap">
+        SELECT * FROM sys_clothe WHERE id=#{id}
+    </select>
+
+    <select id="findAll" resultMap="GoodsEntityMap">
+        SELECT * FROM sys_clothe where count !=0 AND isDelete = '1'
+    </select>
+</mapper>
